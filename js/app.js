@@ -342,23 +342,11 @@
       syncWhatsApp(res.dt);
 
       /* open the visitor's mail client */
+    
+      /* open the visitor's mail client */
       window.location.href = mail.href;
 
-      /* then hand off to the confirmation page with the details in the query string */
-      var q = new URLSearchParams({
-        name:   F.name.value.trim(),
-        date:   F.date.value,
-        time:   F.time.value,
-        guests: F.guests.value.trim(),
-        phone:  F.phone.value.trim(),
-        email:  F.email.value.trim(),
-        notes:  F.notes.value.trim()
-      });
-      setTimeout(function(){
-        window.location.href = 'confirmation.html?' + q.toString();
-      }, 450);
-
-      /* fallback: if the redirect is blocked, the in-page confirmation still stands */
+      /* Show confirmation without interrupting the email link */
       form.hidden = true;
       done.hidden = false;
       if (done.focus) done.focus({preventScroll:true});
@@ -375,6 +363,7 @@
         if (fieldOf(el) && fieldOf(el).classList.contains('bad')) validate();
       });
     });
+
 
     document.getElementById('resEdit').addEventListener('click', function(){
       done.hidden = true;
