@@ -253,13 +253,14 @@
 
       var body = lines.join('\r\n');
       return {
-        href: 'mailto:' + TO +
-              '?subject=' + encodeURIComponent(subject) +
-              '&body=' + encodeURIComponent(body),
-        subject: subject,
-        dt: dt,
-        guests: guests
-      };
+  href: 'mailto:' + TO +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body),
+  subject: subject,
+  body: body,
+  dt: dt,
+  guests: guests
+};
     }
 
     /* ---------- whatsapp message builder ---------- */
@@ -336,15 +337,24 @@
       }
 
       var mail = buildMailto(res.dt);
-      lastMailto = mail.href;
-      retry.setAttribute('href', lastMailto);
+
+lastMailto = 'https://mail.google.com/mail/?view=cm&fs=1' +
+  '&to=' + encodeURIComponent(TO) +
+  '&su=' + encodeURIComponent(mail.subject) +
+  '&body=' + encodeURIComponent(mail.body);
+
+retry.setAttribute('href', lastMailto);
       showSummary(res.dt);
       syncWhatsApp(res.dt);
 
       /* open the visitor's mail client */
     
       /* open the visitor's mail client */
-      window.location.href = mail.href;
+      var emailWindow = window.open(lastMailto, '_blank');
+
+if (!emailWindow) {
+  window.location.href = lastMailto;
+}
 
       /* Show confirmation without interrupting the email link */
       form.hidden = true;
@@ -372,9 +382,16 @@
     });
 
     /* if the mail client fails to open, fall back gracefully */
-    retry.addEventListener('click', function(){
-      if (!lastMailto) return;
-      window.location.href = lastMailto;
-    });
+   retry.addEventListener('click', function(e){
+  if (!lastMailto) return;
+
+  e.preventDefault();
+
+  var emailWindow = window.open(lastMailto, '_blank');
+
+  if (!emailWindow) {
+    window.location.href = lastMailto;
+  }
+});
   })();
 })();
